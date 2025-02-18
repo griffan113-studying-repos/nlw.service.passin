@@ -15,7 +15,7 @@ resource "azurerm_postgresql_flexible_server" "postgres_server" {
   administrator_password = var.postgresPassword
   version                = "16"
 
-  public_network_access_enabled = true
+  public_network_access_enabled = false
 
   tags = {
     "iac" = true
@@ -30,4 +30,22 @@ resource "azurerm_postgresql_flexible_server_database" "postgres_database" {
   # lifecycle {
   #   prevent_destroy = true
   # }
+}
+
+resource "azurerm_private_endpoint" "postgres_private_endpoint" {
+  name                = "postgres-private-endpoint"
+  location            = var.location
+  resource_group_name = var.resourceGroupName
+  subnet_id           = var.subnetId
+
+  private_service_connection {
+    name                           = "postgres-private-connection"
+    private_connection_resource_id = azurerm_postgresql_flexible_server.postgres_server.id
+    subresource_names              = ["postgresqlServer"]
+    is_manual_connection           = false
+  }
+
+  tags = {
+    "iac" = true
+  }
 }
