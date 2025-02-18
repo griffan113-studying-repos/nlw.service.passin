@@ -40,3 +40,13 @@ module "container-registry" {
   location          = azurerm_resource_group.rg.location
 }
 
+module "database" {
+  depends_on = [azurerm_resource_group.rg]
+  source     = "./resources/database"
+
+  resourceGroupName = azurerm_resource_group.rg.name
+  location          = azurerm_resource_group.rg.location
+  postgresLogin     = var.postgresLogin
+  postgresPassword  = var.postgresPassword
+}
+

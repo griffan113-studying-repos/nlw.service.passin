@@ -1,7 +1,3 @@
-variable "resourceGroupName" {
+variable "resourceGroupName" {}
 
-}
-
-variable "location" {
-
-}
+variable "location" {}
